@@ -1,19 +1,11 @@
 from dfa.State import State
 
-
-# dfa_dict = {
-#     0: ('', {0: 1}),
-#     1: ('', {1: 2}),
-#     2: ('', {0: 2, 1: 3}),
-#     3: ('', {0: 3, 1: 0})
+# dfa = {
+#     0: {'a': 1},
+#     1: {'a': 2},
+#     2: {'a': 2, 'b': 3},
+#     3: {'a': 3, 'b': 0}
 # }
-
-dfa = {
-    0: {'a': 1},
-    1: {'a': 2},
-    2: {'a': 2, 'b': 3},
-    3: {'a': 3, 'b': 0}
-}
 
 class DFA:
     def __init__(self, n_states=0, start=0, finals=None, transitions=None):
