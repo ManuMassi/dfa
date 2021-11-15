@@ -36,5 +36,5 @@ class DfaTest(unittest.TestCase):
             self.dfa.set_transition(state=0, transition=('a', 1), event='a', nextState=1)
         with self.assertRaises(AttributeError):
             self.dfa.set_transition(state=0, transition=('a', 1), nextState=1)
-        with self.assertRaises(ValueError):
+        with self.assertRaises(AttributeError):
             self.dfa.set_transition(state=0, transition=('a', 1), event='a')
