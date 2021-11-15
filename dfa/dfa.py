@@ -68,12 +68,22 @@ class DFA:
         self._finals = finals if finals and isinstance(finals, list) else []
 
     def set_transition(self, state, transition=None, event=None, nextState=None):
-        if transition and (event or nextState) or (not transition and (event or nextState)) or (not transition and not event and not nextState):
+        if state not in range(self.n_states):
+            raise IndexError("The state is out of range")
+        if transition and (event or nextState) \
+                or (not transition and (not event or not nextState)):
             raise AttributeError("Signature error")
+
         if event and nextState:
+            if nextState not in range(self.n_states):
+                raise IndexError("The next state is out of range")
             self._dfa[state][event] = nextState
         elif isinstance(transition, tuple):
+            if transition[1] not in range(self.n_states):
+                raise IndexError("The next state is out of range")
             self._dfa[state][transition[0]] = transition[1]
         elif isinstance(transition, dict):
             for k, v in transition.items():
+                if v not in range(self.n_states):
+                    raise IndexError(f"The next state {v} is out of range")
                 self._dfa[state][k] = v

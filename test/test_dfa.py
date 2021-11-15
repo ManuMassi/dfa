@@ -29,7 +29,7 @@ class DfaTest(unittest.TestCase):
         self.assertFalse(self.dfa.finals == 0)
         self.assertTrue(0 in self.dfa.finals)
 
-    def test_add_single_transition(self):
+    def test_add_transition_signature(self):
         with self.assertRaises(AttributeError):
             self.dfa.set_transition(state=0)
         with self.assertRaises(AttributeError):
@@ -38,3 +38,42 @@ class DfaTest(unittest.TestCase):
             self.dfa.set_transition(state=0, transition=('a', 1), nextState=1)
         with self.assertRaises(AttributeError):
             self.dfa.set_transition(state=0, transition=('a', 1), event='a')
+        with self.assertRaises(AttributeError):
+            self.dfa.set_transition(state=0, event='a')
+        with self.assertRaises(AttributeError):
+            self.dfa.set_transition(state=0, nextState=1)
+
+    def test_add_transition_index(self):
+        with self.assertRaises(IndexError):
+            self.dfa.set_transition(state=3, transition=('a', 0))
+        with self.assertRaises(IndexError):
+            self.dfa.set_transition(state=0, transition=('a', 3))
+        with self.assertRaises(IndexError):
+            self.dfa.set_transition(state=3, transition=('a', 3))
+        with self.assertRaises(IndexError):
+            self.dfa.set_transition(state=0, transition={'a': 3})
+        with self.assertRaises(IndexError):
+            self.dfa.set_transition(state=0, transition={'a': 1, 'b': 4})
+        with self.assertRaises(IndexError):
+            self.dfa.set_transition(state=0, event='a', nextState=4)
+
+    def test_add_single_transition(self):
+        self.dfa_dict[0]['a'] = 1
+        self.dfa.set_transition(0, transition=('a', 1))
+        self.assertEqual(self.dfa_dict, self.dfa._dfa)
+
+        self.dfa_dict[1]['a'] = 1
+        self.dfa.set_transition(1, transition={'a': 1})
+        self.assertEqual(self.dfa_dict, self.dfa._dfa)
+
+        self.dfa_dict[2]['a'] = 1
+        self.dfa.set_transition(state=2, event='a', nextState=1)
+        self.assertEqual(self.dfa_dict, self.dfa._dfa)
+
+    def test_add_multiple_transition(self):
+        self.dfa_dict[0]['a'] = 1
+        self.dfa_dict[0]['b'] = 2
+        self.dfa.set_transition(state=0, transition={'a': 1, 'b': 2})
+        self.assertEqual(self.dfa_dict, self.dfa._dfa)
+
+
