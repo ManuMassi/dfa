@@ -68,7 +68,7 @@ class DFA:
         self._finals = finals if finals and isinstance(finals, list) else []
 
     def set_transition(self, state, transition=None, event=None, nextState=None):
-        if transition and (event or nextState) or (not transition and (event or nextState)):
+        if transition and (event or nextState) or (not transition and (event or nextState)) or (not transition and not event and not nextState):
             raise AttributeError("Signature error")
         if event and nextState:
             self._dfa[state][event] = nextState

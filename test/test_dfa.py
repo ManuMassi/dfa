@@ -29,3 +29,12 @@ class DfaTest(unittest.TestCase):
         self.assertFalse(self.dfa.finals == 0)
         self.assertTrue(0 in self.dfa.finals)
 
+    def test_add_single_transition(self):
+        with self.assertRaises(ValueError):
+            self.dfa.set_transition(state=0)
+        with self.assertRaises(AttributeError):
+            self.dfa.set_transition(state=0, transition=('a', 1), event='a', nextState=1)
+        with self.assertRaises(AttributeError):
+            self.dfa.set_transition(state=0, transition=('a', 1), nextState=1)
+        with self.assertRaises(ValueError):
+            self.dfa.set_transition(state=0, transition=('a', 1), event='a')
