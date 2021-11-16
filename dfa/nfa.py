@@ -1,7 +1,7 @@
 from dfa import Automata
 
 
-# dfa = {
+# nfa = {
 #     0: {'a': [1]},
 #     1: {'a': [2]},
 #     2: {'a': [2, 3]},
