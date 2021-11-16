@@ -1,19 +1,18 @@
 from dfa import DFA
 
 
-dfa = DFA(n_states=10, start=0, finals=[8])
+# dfa = DFA(n_states=10, start=0, finals=[8])
+#
+# #print(dfa)
+#
+#
+# dfa.set_transition(0, event='a', nextState=2)
+# dfa.set_transition(0, event='a', nextState=1)
+# print(dfa)
 
-#print(dfa)
-
-
-dfa.set_transition(0, event='a', nextState=2)
-dfa.set_transition(0, event='a', nextState=1)
-
-print(dfa)
-
-import networkx as nx
-import matplotlib.pyplot as plt
-
+# import networkx as nx
+# import matplotlib.pyplot as plt
+#
 # G = nx.DiGraph()
 # G.add_edges_from(
 #     [('A', 'B'), ('A', 'C'), ('D', 'B'), ('E', 'C'), ('E', 'F'),
