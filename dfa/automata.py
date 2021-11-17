@@ -6,6 +6,7 @@ class Automata(ABC):
         self._n_states = n_states
         self._start = start
         self._finals = finals if finals else []
+        self._alphabet = set()
 
         self._automata = {}
         for state in range(n_states):
@@ -16,6 +17,15 @@ class Automata(ABC):
         for s in self._automata.__str__().split('},'):
             automata += (s + '}\n')
         return automata
+
+    def __eq__(self, other):
+        if not isinstance(other, Automata):
+            return False
+        same_dict = list(self._automata.items()).sort() == list(other._automata.items()).sort()
+        return self.start == other.start and \
+            self.finals.sort() == other.finals.sort() and \
+            self.alphabet == other.alphabet and \
+            same_dict
 
     @property
     def n_states(self):
@@ -39,6 +49,9 @@ class Automata(ABC):
     def finals(self, finals):
         self._finals = finals if finals and isinstance(finals, list) else []
 
+    @property
+    def alphabet(self):
+        return self._alphabet
 
     @abstractmethod
     def set_transition(self, state, transition=None, event=None, nextState=None):
@@ -62,13 +75,22 @@ class Automata(ABC):
         if event and nextState:
             if nextState not in range(self.n_states):
                 raise IndexError("The next state is out of range")
+            else:
+                if event != 'eps':
+                    self._alphabet.add(event)
         elif isinstance(transition, tuple):
             if transition[1] not in range(self.n_states):
                 raise IndexError("The next state is out of range")
+            else:
+                if transition[0] != 'eps':
+                    self._alphabet.add(transition[0])
         elif isinstance(transition, dict):
             for k, v in transition.items():
                 if v not in range(self.n_states):
                     raise IndexError(f"The next state {v} is out of range")
+                else:
+                    if k != 'eps':
+                        self._alphabet.add(k)
 
     def add_state(self):
         self._automata[self.n_states] = {}

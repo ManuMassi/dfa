@@ -62,3 +62,11 @@ class TestAutomata(unittest.TestCase):
         self.assertEqual(self.automata.n_states, 2)
         with self.assertRaises(KeyError):
             a = self.automata._automata[0]
+
+    def test_alphabet(self):
+        self.assertEqual(self.automata.alphabet, set())
+
+        self.automata.set_transition(0, ('a', 1))
+        self.assertEqual(self.automata.alphabet, {'a'})
+        self.automata.set_transition(0, {'c': 1, 'd':1, 'e': 1, 'f': 1})
+        self.assertEqual(self.automata.alphabet, {'a', 'c', 'd', 'e', 'f'})
