@@ -1,8 +1,8 @@
-#DFA
----
+# DFA
+
 A python library that allows to create and manage Deterministic Finite state Automatas and Non-deterministic Finite state Automatas
 
-#Usage
+# Usage
 
 **Basic structure of DFAs and NFAs**  
   
@@ -12,7 +12,7 @@ After creating a DFA or a NFA using the constructor, a dictionary representing a
 This dictionary is an attribute of the class, and it's named *_automata*.  
 As you can see it's a private attribute, and that's because you probably won't need to access it directly.  
   
-###Example
+### Example
 
 ```python
 dfa = {
@@ -35,7 +35,7 @@ The most important attributes that you can access are:
 - **_finals_**: the finals states -> list of ints
 
 
-##Creating a DFA and a NFA
+## Creating a DFA and a NFA
 ```python
 from dfa import DFA, NFA
 
@@ -44,7 +44,7 @@ my_dfa = DFA(n_states=4, start=0, finals=[2,3])
 my_nfa = NFA(n_states=4, start=0, finals=[2,3])
 ```
 
-##Adding transitions
+## Adding transitions
 After creating a DFA or a NFA, you have to add transitions between states.
 
 You can do it using the *set_transition()* method on the DFA or NFA object. <br/>
@@ -66,7 +66,7 @@ This method can be used in 3 different ways:
        my_dfa.set_transition(state=0, event='a', nextState=1) # For NFAs is the same
     ```
 
-##Upcoming features
+## Upcoming features
 
 - **Concurrent / Parallel composition**
 - **Reachable and Co-reachable states**
