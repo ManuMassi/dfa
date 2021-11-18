@@ -1,7 +1,6 @@
-from dfa import DFA, NFA
 import unittest
-
-from dfa.nfa import nfa2dfa
+from dfa import DFA, NFA
+from dfa.utils import nfa2dfa, concurrent_composition
 
 
 class TestUtils(unittest.TestCase):
@@ -58,6 +57,9 @@ class TestUtils(unittest.TestCase):
         dfa.set_transition(1, {'b': 1, 'a': 2})
         dfa.set_transition(2, {'b': 0, 'a': 2})
 
+        # print(nfa2dfa(nfa))
+        # print(dfa)
+
         self.assertEqual(nfa2dfa(nfa), dfa)
 
         nfa = NFA(6, finals=[0])
@@ -69,10 +71,34 @@ class TestUtils(unittest.TestCase):
         nfa.set_transition(4, {'b': 4, 'c': 5})
         nfa.set_transition(5, {'a': 5, 'b': 0})
 
-        dfa = DFA(4, finals=0)
+        dfa = DFA(4, finals=[0])
         dfa.set_transition(0, ('a', 1))
         dfa.set_transition(1, {'b': 2, 'c': 3})
         dfa.set_transition(2, {'b': 2, 'c': 3})
         dfa.set_transition(3, {'a': 3, 'b': 0})
 
         self.assertEqual(nfa2dfa(nfa), dfa)
+
+    def test_concurrent_composition(self):
+        dfa1 = DFA(4, finals=[0])
+        dfa1.set_transition(0, ('a', 1))
+        dfa1.set_transition(1, ('b', 2))
+        dfa1.set_transition(2, ('c', 3))
+        dfa1.set_transition(3, {'a': 0, 'b': 3})
+
+        dfa2 = DFA(2, finals=[0, 1])
+        dfa2.set_transition(0, ('b', 1))
+        dfa2.set_transition(1, {'c': 1, 'd': 0})
+
+        states = [(0, 0), (1, 0), (2, 1), (3, 1), (2, 0), (0, 1), (3, 0), (1, 1)]
+        composition = DFA(8, finals=[(0, 0), (0, 1)], custom_states=states)
+        composition.set_transition((0, 0), {'a': (1, 0)})
+        composition.set_transition((1, 0), {'b': (2, 1)})
+        composition.set_transition((2, 1), {'c': (3, 1), 'd': (2, 0)})
+        composition.set_transition((3, 1), {'a': (0, 1), 'd': (3, 0)})
+        composition.set_transition((0, 1), {'a': (1, 1)})
+        composition.set_transition((0, 1), {'d': (0, 0)})
+        composition.set_transition((3, 0), {'a': (0, 0), 'b': (3, 1)})
+        composition.set_transition((1, 1), {'d': (1, 0)})
+
+        self.assertEqual(composition, concurrent_composition(dfa1, dfa2))

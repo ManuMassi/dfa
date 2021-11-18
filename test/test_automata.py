@@ -26,12 +26,18 @@ class TestAutomata(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.automata.start = 3
 
+    @patch("dfa.automata.Automata.__abstractmethods__", set())
     def test_final_states(self):
         self.automata.finals = [0, 1, 2]
 
-        self.assertEqual(self.automata.finals, [0, 1, 2])
+        self.assertEqual(self.automata.finals, {0, 1, 2})
         self.assertFalse(self.automata.finals == 0)
         self.assertTrue(0 in self.automata.finals)
+
+        automata = Automata(3, finals=0)
+        self.assertEqual(automata.finals, {0})
+        automata = Automata(3, finals={1, 2, 3})
+        self.assertEqual(automata.finals, {1, 2, 3})
 
     def test_add_transition_signature(self):
         with self.assertRaises(AttributeError):
@@ -70,3 +76,12 @@ class TestAutomata(unittest.TestCase):
         self.assertEqual(self.automata.alphabet, {'a'})
         self.automata.set_transition(0, {'c': 1, 'd':1, 'e': 1, 'f': 1})
         self.assertEqual(self.automata.alphabet, {'a', 'c', 'd', 'e', 'f'})
+
+    @patch("dfa.automata.Automata.__abstractmethods__", set())
+    def test_custom_states(self):
+        automata = Automata(n_states=3, custom_states=['a', 'cool_state', 777])
+        self.assertEqual(automata.states, {'a', 'cool_state', 777})
+
+        with self.assertRaises(ValueError):
+            Automata(3, custom_states=[1, 2])
+

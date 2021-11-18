@@ -33,7 +33,7 @@ class NFA(Automata):
 
         elif isinstance(transition, dict):
             for e, s in transition.items():
-                if event not in self._automata[state]:
+                if e not in self._automata[state]:
                     self._automata[state][e] = []
                 self._automata[state][e].append(s)
 
@@ -82,50 +82,3 @@ class NFA(Automata):
                     D_event = D_event.union(self.compute_D_eps(nextState))
 
         return D_event
-
-
-def nfa2dfa(nfa):
-    x_new = [nfa.compute_D_eps(0)]
-    X = x_new.copy()
-
-    transitions = []
-    while len(x_new) > 0:
-        # Select a state x' from x_new
-        x_prime = x_new.pop()
-
-        for event in nfa.alphabet:
-            alpha = set()
-            for state in x_prime:
-                alpha = alpha.union(nfa.compute_D_event(state, event))
-
-            if len(alpha) > 0:
-                beta = set()
-                for state in alpha:
-                    beta = beta.union(nfa.compute_D_eps(state))
-
-                if len(beta) > 0:
-                    # Save transition found
-                    fromState = x_prime.copy()
-                    toState = beta.copy()
-                    transitions.append((fromState, event, toState))
-
-                    # Save the new state
-                    if beta not in X:
-                        x_new.append(beta)
-                        X.append(beta)
-
-    # Compute final states
-    finals = []
-    for state_set in X:
-        for state in state_set:
-            if state in nfa.finals:
-                finals.append(state)
-
-    # Creating the dfa
-    dfa = DFA(len(X), start=0, finals=finals)
-
-    # Setting transitions
-    for transition in transitions:
-        dfa.set_transition(X.index(transition[0]), (transition[1], X.index(transition[2])))
-
-    return dfa

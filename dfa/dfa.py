@@ -1,5 +1,6 @@
 from dfa.automata import Automata
 
+
 # dfa = {
 #     0: {'a': 1},
 #     1: {'a': 2},
@@ -31,4 +32,9 @@ class DFA(Automata):
                 if state == self._automata[s][event]:
                     del self._automata[s][event]
 
+    def delta(self, state, event):
+        try:
+            return self._automata[state][event]
+        except KeyError:
+            return set()
 

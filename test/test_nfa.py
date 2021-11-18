@@ -53,3 +53,4 @@ class TestNFA(unittest.TestCase):
         del self.dfa_dict[2]
         self.assertEqual(self.nfa._automata, self.dfa_dict)
 
+
