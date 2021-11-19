@@ -1,4 +1,4 @@
-from dfa import Automata, DFA
+from dfa import Automata, DFA, EPS
 
 
 # nfa = {
@@ -50,7 +50,7 @@ class NFA(Automata):
     #     D_eps = {state}
     #
     #     for event in self._automata[state]:
-    #         if event == self.EPS:
+    #         if event == EPS:
     #             for nextState in self._automata[state][event]:
     #                 D_eps.add(nextState)
     #                 D_eps = D_eps.union(self.compute_D_eps(nextState))
@@ -64,7 +64,7 @@ class NFA(Automata):
             D_eps.add(actualState)
 
             for event in self._automata[actualState]:
-                if event == self.EPS:
+                if event == EPS:
                     for nextState in self._automata[actualState][event]:
                         if nextState not in D_eps:
                             return D_eps.union(rec(nextState, D_eps))

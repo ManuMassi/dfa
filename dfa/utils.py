@@ -1,5 +1,7 @@
-from dfa import NFA, DFA
-
+from dfa import NFA, DFA, Automata
+import networkx as nx
+from matplotlib import pyplot as plt
+import os
 
 def nfa2dfa(nfa):
     x_new = [nfa.compute_D_eps(0)]
@@ -94,3 +96,38 @@ def concurrent_composition(g: DFA, h: DFA):
         final_dfa.set_transition(transition[0], (transition[1], transition[2]))
 
     return final_dfa
+
+
+def draw_automata(automata: Automata):
+    if not isinstance(automata, DFA) and not isinstance(automata, NFA):
+        raise TypeError("You must pass a DFA or a NFA")
+
+    G = nx.MultiDiGraph()
+    G.add_nodes_from(automata.states)
+
+    # Set transitions
+    for state in automata.states:
+        if automata.get_events_from_state(state):
+            for event in automata.get_events_from_state(state):
+                if isinstance(automata, DFA):
+                    G.add_edge(state, automata.delta(state, event), label=event)
+                else:
+                    for s in automata.delta(state, event):
+                        G.add_edge(state, s, label=event)
+
+
+    # Draw
+    position = nx.spring_layout(G)
+    nx.draw(G, pos=position, with_labels=True, font_weight='bold', labels={node: node for node in G.nodes()})
+
+    # Convert from nx to pydot
+    pydot_graph = nx.drawing.nx_pydot.to_pydot(G)
+
+    with open('./automata.dot', 'w') as f:
+        f.write(str(pydot_graph))
+
+    os.system("dot -Tpng ./automata.dot -o automata.png")
+    os.system("rm ./automata.dot")
+
+
+

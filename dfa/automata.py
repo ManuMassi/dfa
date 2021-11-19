@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+EPS = 'eps'
 
 class Automata(ABC):
     def __init__(self, n_states=0, start=0, finals=None, custom_states=None):
@@ -67,7 +68,6 @@ class Automata(ABC):
         else:
             raise TypeError("You must pass the final states as a list or as a single state")
 
-
     @property
     def alphabet(self):
         return self._alphabet
@@ -75,6 +75,24 @@ class Automata(ABC):
     @property
     def states(self):
         return set(self._automata.keys())
+
+    def get_events_from_state(self, state):
+        if state not in self.states:
+            raise ValueError("The selected state is not in the automata")
+
+        return set(self._automata[state])
+
+    def delta(self, state, event):
+        if state not in self.states:
+            raise ValueError("The selected state is not in the automata")
+        if event not in self.alphabet.union({EPS}):
+            raise ValueError("The selected event is not in the alphabet")
+
+        try:
+            return self._automata[state][event]
+        except KeyError:
+            return set()
+
 
     @abstractmethod
     def set_transition(self, state, transition=None, event=None, nextState=None):
@@ -99,7 +117,7 @@ class Automata(ABC):
             if nextState not in self._automata.keys():
                 raise IndexError("The next state is out of range")
             else:
-                if event != 'eps':
+                if event != EPS:
                     self._alphabet.add(event)
         elif isinstance(transition, tuple):
             if transition[1] not in self._automata.keys():
@@ -112,7 +130,7 @@ class Automata(ABC):
                 if v not in self._automata.keys():
                     raise IndexError(f"The next state {v} is out of range")
                 else:
-                    if k != 'eps':
+                    if k != EPS:
                         self._alphabet.add(k)
 
     def add_state(self):

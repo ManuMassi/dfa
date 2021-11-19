@@ -68,8 +68,5 @@ This method can be used in 3 different ways:
 
 ## Upcoming features
 
-- **Concurrent / Parallel composition**
 - **Reachable and Co-reachable states**
-- **Conversion from NFA to DFA**
 - **Accepted language**
-- **Graphical representation**

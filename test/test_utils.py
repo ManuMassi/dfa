@@ -1,6 +1,6 @@
 import unittest
-from dfa import DFA, NFA
-from dfa.utils import nfa2dfa, concurrent_composition
+from dfa import DFA, NFA, EPS
+from dfa.utils import nfa2dfa, concurrent_composition, draw_automata
 
 
 class TestUtils(unittest.TestCase):
@@ -102,3 +102,49 @@ class TestUtils(unittest.TestCase):
         composition.set_transition((1, 1), {'d': (1, 0)})
 
         self.assertEqual(composition, concurrent_composition(dfa1, dfa2))
+
+    def test_draw_automata(self):
+        dfa = DFA(4, finals=[0])
+        dfa.set_transition(0, ('a', 1))
+        dfa.set_transition(1, {'b': 2, 'c': 3})
+        dfa.set_transition(2, {'b': 2, 'c': 3})
+        dfa.set_transition(3, {'a': 3, 'b': 0})
+
+        draw_automata(dfa)
+
+        nfa = NFA(6, finals=[0])
+        nfa.set_transition(0, ('a', 1))
+        nfa.set_transition(0, ('a', 3))
+        nfa.set_transition(1, (EPS, 2))
+        nfa.set_transition(2, ('c', 5))
+        nfa.set_transition(3, (EPS, 4))
+        nfa.set_transition(4, {'b': 4, 'c': 5})
+        nfa.set_transition(5, {'a': 5, 'b': 0})
+
+        draw_automata(nfa)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
