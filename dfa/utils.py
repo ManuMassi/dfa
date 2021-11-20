@@ -1,7 +1,5 @@
 from dfa import NFA, DFA, Automata
 import networkx as nx
-from matplotlib import pyplot as plt
-import os
 
 def nfa2dfa(nfa):
     x_new = [nfa.compute_D_eps(0)]
@@ -115,7 +113,6 @@ def draw_automata(automata: Automata):
                     for s in automata.delta(state, event):
                         G.add_edge(state, s, label=event)
 
-
     # Draw
     position = nx.spring_layout(G)
     nx.draw(G, pos=position, with_labels=True, font_weight='bold', labels={node: node for node in G.nodes()})
@@ -123,11 +120,8 @@ def draw_automata(automata: Automata):
     # Convert from nx to pydot
     pydot_graph = nx.drawing.nx_pydot.to_pydot(G)
 
-    with open('./automata.dot', 'w') as f:
-        f.write(str(pydot_graph))
-
-    os.system("dot -Tpng ./automata.dot -o automata.png")
-    os.system("rm ./automata.dot")
+    # Save png file
+    pydot_graph.write_png('output.png')
 
 
 
