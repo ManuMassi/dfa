@@ -34,7 +34,6 @@ def nfa2dfa(nfa):
                         x_new.append(beta)
                         X.append(str(beta))
 
-                        print('beta=', beta)
                         for state in beta:
                             if state in nfa.finals and str(beta) not in finals:
                                 finals.append(str(beta))

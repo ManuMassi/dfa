@@ -100,6 +100,7 @@ class TestUtils(unittest.TestCase):
 
         self.assertEqual(composition, concurrent_composition(dfa1, dfa2))
 
+    @unittest.skip
     def test_draw_automata(self):
         dfa = DFA(4, finals=[0])
         dfa.set_transition(0, ('a', 1))
