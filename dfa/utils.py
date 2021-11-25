@@ -1,9 +1,12 @@
 from dfa import NFA, DFA, Automata
 import networkx as nx
 
+
 def nfa2dfa(nfa):
     x_new = [nfa.compute_D_eps(0)]
-    X = x_new.copy()
+    # X = x_new.copy()
+    X = [str(x_new[0].copy())]
+    finals = [X[0]]
 
     transitions = []
     while len(x_new) > 0:
@@ -27,23 +30,21 @@ def nfa2dfa(nfa):
                     transitions.append((fromState, event, toState))
 
                     # Save the new state
-                    if beta not in X:
+                    if str(beta) not in X:
                         x_new.append(beta)
-                        X.append(beta)
+                        X.append(str(beta))
 
-    # Computing final states
-    finals = []
-    for state_set in X:
-        for state in state_set:
-            if state in nfa.finals:
-                finals.append(X.index(state_set))
+                        print('beta=', beta)
+                        for state in beta:
+                            if state in nfa.finals and str(beta) not in finals:
+                                finals.append(str(beta))
 
     # Creating the dfa
-    dfa = DFA(len(X), start=0, finals=finals)
+    dfa = DFA(len(X), finals=finals, custom_states=X)
 
     # Setting transitions
     for transition in transitions:
-        dfa.set_transition(X.index(transition[0]), (transition[1], X.index(transition[2])))
+        dfa.set_transition((str(transition[0])), (transition[1], (str(transition[2]))))
 
     return dfa
 
@@ -121,7 +122,7 @@ def draw_automata(automata: Automata):
     pydot_graph = nx.drawing.nx_pydot.to_pydot(G)
 
     # Save png file
-    pydot_graph.write_png('output.png')
+    pydot_graph.write_png('./automata.png')
 
 
 

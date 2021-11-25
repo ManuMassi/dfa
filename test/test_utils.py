@@ -52,13 +52,10 @@ class TestUtils(unittest.TestCase):
         nfa.set_transition(2, (nfa.EPS, 3))
         nfa.set_transition(3, {'b': 3, nfa.EPS: 0})
 
-        dfa = DFA(3, finals=[0, 1, 2])
-        dfa.set_transition(0, ('b', 1))
-        dfa.set_transition(1, {'b': 1, 'a': 2})
-        dfa.set_transition(2, {'b': 0, 'a': 2})
-
-        # print(nfa2dfa(nfa))
-        # print(dfa)
+        dfa = DFA(3, finals=['{0}', '{0, 1, 2, 3}', '{0, 2, 3}'], custom_states=['{0}', '{0, 1, 2, 3}', '{0, 2, 3}'])
+        dfa.set_transition('{0}', ('b', '{0, 1, 2, 3}'))
+        dfa.set_transition('{0, 1, 2, 3}', {'a': '{0, 2, 3}', 'b': '{0, 1, 2, 3}'})
+        dfa.set_transition('{0, 2, 3}', {'a': '{0, 2, 3}', 'b': '{0, 1, 2, 3}'})
 
         self.assertEqual(nfa2dfa(nfa), dfa)
 
@@ -71,11 +68,11 @@ class TestUtils(unittest.TestCase):
         nfa.set_transition(4, {'b': 4, 'c': 5})
         nfa.set_transition(5, {'a': 5, 'b': 0})
 
-        dfa = DFA(4, finals=[0])
-        dfa.set_transition(0, ('a', 1))
-        dfa.set_transition(1, {'b': 2, 'c': 3})
-        dfa.set_transition(2, {'b': 2, 'c': 3})
-        dfa.set_transition(3, {'a': 3, 'b': 0})
+        dfa = DFA(4, finals=['{0}'], custom_states=['{0}', '{1, 2, 3, 4}', '{4}', '{5}'])
+        dfa.set_transition('{0}', ('a', '{1, 2, 3, 4}'))
+        dfa.set_transition('{1, 2, 3, 4}', {'b': '{4}', 'c': '{5}'})
+        dfa.set_transition('{4}', {'b': '{4}', 'c': '{5}'})
+        dfa.set_transition('{5}', {'a': '{5}', 'b': '{0}'})
 
         self.assertEqual(nfa2dfa(nfa), dfa)
 

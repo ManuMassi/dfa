@@ -2,10 +2,11 @@ from abc import ABC, abstractmethod
 
 EPS = 'eps'
 
+
 class Automata(ABC):
-    def __init__(self, n_states=0, start=0, finals=None, custom_states=None):
+    def __init__(self, n_states=0, start=None, finals=None, custom_states=None):
         self._n_states = n_states
-        self._start = start
+
         self._alphabet = set()
 
         self._automata = {}
@@ -21,6 +22,9 @@ class Automata(ABC):
                 self._automata[state] = {}
 
         self._states = set(self._automata.keys())
+        if start is None:
+            start = list(self._automata.keys())[0]
+        self.start = start
         self.finals = finals
 
     def __str__(self):
@@ -33,6 +37,15 @@ class Automata(ABC):
         if not isinstance(other, Automata):
             return False
         same_dict = list(self._automata.items()).sort() == list(other._automata.items()).sort()
+
+        if self.start != other.start:
+            print('start')
+        if self.finals != other.finals:
+            print('finals')
+        if self.alphabet != other.alphabet:
+            print('alphabet')
+        if not same_dict:
+            print('not same dict')
 
         return self.start == other.start and \
             self.finals == other.finals and \
